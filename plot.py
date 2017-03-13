@@ -96,11 +96,9 @@ def readArff(filename):#return arffData (class Data)
 	return arffData
 
 def sigmoid(x):
-	#print x,1/(1 + math.exp(-x)) 
 	return 1.0/(1.0 + math.exp(-x))
 
 def forward(network, inputs):
-	#inputs.append(1.0)#add bias
 	output = []
 	hidden = []
 	result2 = 0.0
@@ -111,8 +109,7 @@ def forward(network, inputs):
 
 		for inputlayer in range(0, network.inputnum):
 			result1 += network.inputandhidden[hiddenlayer][inputlayer]*inputs[inputlayer]
-		result1 += network.inputandhidden[hiddenlayer][network.inputnum]
-		#print result1	
+		result1 += network.inputandhidden[hiddenlayer][network.inputnum]	
 		result = sigmoid(result1)
 
 		hidden.append(result)
@@ -125,7 +122,6 @@ def forward(network, inputs):
 
 	output.append(hidden)
 	output.append(result2)
-	#inputs.pop()
 	return output
 
 def backward(network, data, traindata, learningrate,numepochs):
@@ -138,7 +134,6 @@ def backward(network, data, traindata, learningrate,numepochs):
 			else:
 				label = 1
 			output = forward(network, inputs)
-			#loss1 = (output[1]-label)*(output[1]-label)
 			#for output unit
 			deltaoutput = output[1]*(1 - output[1])*(label - output[1])	
 
@@ -157,41 +152,16 @@ def backward(network, data, traindata, learningrate,numepochs):
 			for i in range(0,network.hiddenunitsnum):	
 
 				for j in range(0,network.inputnum+1):
-					network.inputandhidden[i][j] += learningrate*delta[i]*output[0][i]
-			#output = forward(network, inputs)
-			#loss2 = (output[1]-label)*(output[1]-label)
+					network.inputandhidden[i][j] += learningrate*delta[i]*inputs[j]
 			
-			'''
-			if loss1<loss2:
-				print 'warning',loss1,loss2
+	output=[]
+	loss = 0
+	for instance in data.instance:
+		a = forward(network, instance[0:len(instance)-2])[1]
+		output.append(a)
 			
-			if loss1>0.25 and loss2<0.25:
-				print 'attention',loss1, loss2
-			'''
-			
-		'''
-		count =0
-		if ite%5 == 0:
-			loss = 0
-			for instance in data.instance:
-				if instance[-2] == data.attribute[-1][1]:
-					label = 0
-				else:
-					label = 1
-				#print instance
-				a = forward(network, instance[0:len(instance)-2])[1]
-				if  a<0.5:
-					label0 = data.attribute[-1][1]
-				else:
-					label0 = data.attribute[-1][2]
-				if label0==instance[-2]:
-					count+=1
-				loss+=(label-a)*(label-a)
-				#print label0,instance[-2],a
-			print ite,count,(count+0.0)/data.instnumber,loss
-		#return network
-		'''
-	#return count
+	
+	return output
 
 def preparefolds(traindata, numfolds):
 	#prepare the training set
@@ -276,12 +246,12 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 			result.append(resultline)
 			if label == instance[-2]:
 				count += 1
-	'''
+
 	output = []
 	
 	for i in range(0,len(traindata.instance)):
 		output.append(0)
-
+	'''
 	for line in result:
 		output[line[-1]] = line[0:4]
 
@@ -289,6 +259,71 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 		print line[0]+1,line[1],line[2],line[3]
 	'''
 	print count,(count+0.0)/traindata.instnumber
+	return (count+0.0)/traindata.instnumber
+
+def ROC(traindata, numfolds, learningrate, numepochs):
+	#prepare folds
+	trainset = preparefolds(traindata, numfolds)
+	
+	result = []
+	count = 0
+	PLOT = []
+	for i in range(0, numfolds):
+		#intialize the network
+		network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
+		index = range(0,numfolds)
+		index.pop(i)
+		datafortraining = []
+		for j in index:
+			for instance in trainset[j]:
+				datafortraining.append(instance)
+		output = backward(network,traindata,datafortraining,learningrate, numepochs)
+		output.sort()
+		output.reverse()
+		X=[]
+		Y=[]
+		Z=[]
+		for line in output:
+			indicator = 0
+			TP = 0.0
+			FP = 0.0
+			FN = 0.0
+			TN = 0.0
+			for instance in traindata.instance:
+				a = forward(network,instance[0:len(instance)-2])[1]
+				if a<line:
+					label = traindata.attribute[-1][1]
+					if label == instance[-2]:
+						TN +=1
+					else:
+						FN +=1
+				else:
+					label = traindata.attribute[-1][2]
+					if label == instance[-2]:
+						TP +=1
+					else:
+						FP +=1
+			FPR = (FP+0.0)/(TN+FP)
+			TPR = (TP+0.0)/(TP+FN)
+			X.append(FPR)
+			Y.append(TPR)
+			if indicator==0:
+				Z.append(TPR)
+				PLOT.append([FPR,TPR])
+			else:
+				Z.append(TPR-Z[-1])
+				PLOT.append([FPR,TPR-Z[-1]])
+			indicator +=1
+	
+	PLOT.sort(key=lambda x:x[0])
+	yvalue = 0
+	XX=[]
+	YY=[]
+	for point in PLOT:
+		XX.append(point[0])
+		yvalue+=(point[1]+0.0)/numfolds
+		YY.append(yvalue)
+	return [XX,YY]
 
 
 trainfile = "sonar.arff"
@@ -296,6 +331,7 @@ trainfile = "sonar.arff"
 #load dataset
 traindata = readArff(trainfile)
 
+'''
 #plot for epochs 25,50,75,100, lr=0,1, folds=10
 epochs = [25,50,75,100]
 accuracy1 = []
@@ -312,15 +348,22 @@ plt.savefig("AccuracyVsEpochs.eps")
 folds = [5,10,15,20,25]
 accuracy2 = []
 for num in folds:
-	accuracy1.append(CVtraining(traindata, num, 0.1, 50))
+	accuracy2.append(CVtraining(traindata, num, 0.1, 50))
 
 plt.plot(folds,accuracy2,'bo-')
 plt.xlabel('Folds')
 plt.ylabel('Accuracy')
 plt.title('Accuracy vs Folds')
 plt.savefig("AccuracyVsFolds.eps")
+'''
 
-
+#ROC for lr=0.1, epochs=50,folds=10
+graph = ROC(traindata, 10, 0.1, 5)
+plt.plot(graph[0],graph[1],'bo-')
+plt.xlabel('FPR')
+plt.ylabel('TPR')
+plt.title('ROC')
+plt.savefig("ROC.eps")
 
 
 
