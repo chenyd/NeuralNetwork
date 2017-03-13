@@ -170,7 +170,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 			
 		
 		count =0
-		if ite%5 == 0:
+		if ite%50 == 0:
 			loss = 0
 			for instance in data.instance:
 				if instance[-2] == data.attribute[-1][1]:
