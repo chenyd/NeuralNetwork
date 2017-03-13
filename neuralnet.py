@@ -313,10 +313,10 @@ network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
 #CVtraining(traindata, numfolds, learningrate, numepochs)
 
 
-backward(network,traindata,traindata.instance,learningrate,500)
-backward(network,traindata,traindata.instance,0.05,500)
-backward(network,traindata,traindata.instance,0.03,500)
-backward(network,traindata,traindata.instance,0.01,500)
+backward(network,traindata,traindata.instance,learningrate,1000)
+backward(network,traindata,traindata.instance,0.05,1000)
+backward(network,traindata,traindata.instance,0.03,1000)
+backward(network,traindata,traindata.instance,0.01,5000)
 	
 
 '''
