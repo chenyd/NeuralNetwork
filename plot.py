@@ -276,9 +276,9 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 			result.append(resultline)
 			if label == instance[-2]:
 				count += 1
-
+	'''
 	output = []
-
+	
 	for i in range(0,len(traindata.instance)):
 		output.append(0)
 
@@ -287,6 +287,7 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 
 	for line in output:
 		print line[0]+1,line[1],line[2],line[3]
+	'''
 	print count,(count+0.0)/traindata.instnumber
 
 
@@ -313,7 +314,7 @@ accuracy2 = []
 for num in folds:
 	accuracy1.append(CVtraining(traindata, num, 0.1, 50))
 
-plt.plot(epochs,accuracy2,'bo-')
+plt.plot(folds,accuracy2,'bo-')
 plt.xlabel('Folds')
 plt.ylabel('Accuracy')
 plt.title('Accuracy vs Folds')
