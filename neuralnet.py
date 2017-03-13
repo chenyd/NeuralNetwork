@@ -301,7 +301,7 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 trainfile = "sonar.arff"
 numfolds = 10
 learningrate = 0.1
-numepochs = 1000
+numepochs = 50
 
 #load dataset
 traindata = readArff(trainfile)
