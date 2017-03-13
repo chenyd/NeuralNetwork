@@ -300,7 +300,7 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 
 trainfile = "sonar.arff"
 numfolds = 10
-learningrate = 0.05
+learningrate = 0.1
 numepochs = 1000
 
 #load dataset
@@ -313,7 +313,10 @@ network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
 #CVtraining(traindata, numfolds, learningrate, numepochs)
 
 
-backward(network,traindata,traindata.instance,learningrate,numepochs)
+backward(network,traindata,traindata.instance,learningrate,500)
+backward(network,traindata,traindata.instance,0.05,500)
+backward(network,traindata,traindata.instance,0.03,500)
+backward(network,traindata,traindata.instance,0.01,500)
 	
 
 '''
