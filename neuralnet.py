@@ -21,7 +21,7 @@ class Network:#include inputnum, hiddenunitsnum, inputandhidden, hiddenandoutput
 		for i in range(0, hiddenunitsnum):
 			weight = []
 			for j in range(0, inputnum+1): #the last one functions as the bias
-				weight.append(random.uniform(0, 0.1))
+				weight.append(random.uniform(-0.1, 0.1))
 				#weight.append(0)
 			#weight.append(0)
 			inputandhidden.append(weight)
@@ -31,7 +31,7 @@ class Network:#include inputnum, hiddenunitsnum, inputandhidden, hiddenandoutput
 		hiddenandoutput = []
 
 		for i in range(0, hiddenunitsnum+1): #the last one functions as the bias
-			hiddenandoutput.append(random.uniform(0,0.1))
+			hiddenandoutput.append(random.uniform(-0.1,0.1))
 			#hiddenandoutput.append(0)
 		#hiddenandoutput.append(random.uniform(0,0.1))
 		self.hiddenandoutput = hiddenandoutput
@@ -156,7 +156,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 			for i in range(0,network.hiddenunitsnum):	
 
 				for j in range(0,network.inputnum+1):
-					network.inputandhidden[i][j] += learningrate*delta[i]*output[0][i]
+					network.inputandhidden[i][j] += learningrate*delta[i]*inputs[i]
 			#output = forward(network, inputs)
 			#loss2 = (output[1]-label)*(output[1]-label)
 			
@@ -168,9 +168,9 @@ def backward(network, data, traindata, learningrate,numepochs):
 				print 'attention',loss1, loss2
 			'''
 			
-		
+		'''
 		count =0
-		if ite%1 == 0:
+		if ite%5 == 0:
 			loss = 0
 			for instance in data.instance:
 				if instance[-2] == data.attribute[-1][1]:
@@ -189,7 +189,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 				#print label0,instance[-2],a
 			print ite,count,(count+0.0)/data.instnumber,loss
 		#return network
-		
+		'''
 	#return count
 
 def preparefolds(traindata, numfolds):
@@ -307,16 +307,13 @@ numepochs = 1000
 traindata = readArff(trainfile)
 
 #intialize the network
-network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
+#network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
 #network.show()
 #training with cross validation
-#CVtraining(traindata, numfolds, learningrate, numepochs)
+CVtraining(traindata, numfolds, learningrate, numepochs)
 
 
-backward(network,traindata,traindata.instance,-50,1000)
-#backward(network,traindata,traindata.instance,0.5,300)
-#backward(network,traindata,traindata.instance,0.1,1000)
-#backward(network,traindata,traindata.instance,0.05,2000)
+#backward(network,traindata,traindata.instance,learningrate,numepochs)
 	
 
 '''
