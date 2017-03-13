@@ -2,6 +2,7 @@ import re
 import sys
 import math
 import random
+import matplotlib.pyplot as plt
 
 class Data:#include attribute, attrnumber, attrvaluenumber, instance, instnumber
 	def __init__(self, attribute, attrnumber, attrvaluenumber, instance, instnumber):
