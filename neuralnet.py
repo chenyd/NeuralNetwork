@@ -170,7 +170,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 			
 		
 		count =0
-		if ite%50 == 0:
+		if ite%5 == 0:
 			loss = 0
 			for instance in data.instance:
 				if instance[-2] == data.attribute[-1][1]:
@@ -313,7 +313,7 @@ network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
 #CVtraining(traindata, numfolds, learningrate, numepochs)
 
 
-backward(network,traindata,traindata.instance,-200,3000)
+backward(network,traindata,traindata.instance,-50,3000)
 #backward(network,traindata,traindata.instance,0.5,300)
 #backward(network,traindata,traindata.instance,0.1,1000)
 #backward(network,traindata,traindata.instance,0.05,2000)
