@@ -21,7 +21,7 @@ class Network:#include inputnum, hiddenunitsnum, inputandhidden, hiddenandoutput
 		for i in range(0, hiddenunitsnum):
 			weight = []
 			for j in range(0, inputnum+1): #the last one functions as the bias
-				weight.append(random.uniform(-0.1, 0.1))
+				weight.append(random.uniform(0, 1))
 				#weight.append(0)
 			#weight.append(0)
 			inputandhidden.append(weight)
@@ -31,9 +31,9 @@ class Network:#include inputnum, hiddenunitsnum, inputandhidden, hiddenandoutput
 		hiddenandoutput = []
 
 		for i in range(0, hiddenunitsnum+1): #the last one functions as the bias
-			hiddenandoutput.append(random.uniform(-0.1,0.1))
+			hiddenandoutput.append(random.uniform(0,1))
 			#hiddenandoutput.append(0)
-		#hiddenandoutput.append(-100)
+		#hiddenandoutput.append(random.uniform(0,0.1))
 		self.hiddenandoutput = hiddenandoutput
 
 	def show(self):
@@ -99,7 +99,7 @@ def sigmoid(x):
 	return 1.0/(1.0 + math.exp(-x))
 
 def forward(network, inputs):
-	inputs.append(1.0)#add bias
+	#inputs.append(1.0)#add bias
 	output = []
 	hidden = []
 	result2 = 0.0
@@ -108,8 +108,9 @@ def forward(network, inputs):
 
 		result1 = 0.0
 
-		for inputlayer in range(0, network.inputnum+1):
+		for inputlayer in range(0, network.inputnum):
 			result1 += network.inputandhidden[hiddenlayer][inputlayer]*inputs[inputlayer]
+		result1 += network.inputandhidden[hiddenlayer][network.inputnum]
 		#print result1	
 		result = sigmoid(result1)
 
@@ -123,7 +124,7 @@ def forward(network, inputs):
 
 	output.append(hidden)
 	output.append(result2)
-	inputs.pop()
+	#inputs.pop()
 	return output
 
 def backward(network, data, traindata, learningrate,numepochs):
@@ -136,7 +137,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 			else:
 				label = 1
 			output = forward(network, inputs)
-			loss1 = (output[1]-label)*(output[1]-label)
+			#loss1 = (output[1]-label)*(output[1]-label)
 			#for output unit
 			deltaoutput = output[1]*(1 - output[1])*(label - output[1])	
 
@@ -149,16 +150,15 @@ def backward(network, data, traindata, learningrate,numepochs):
 
 			for i in range(0,network.hiddenunitsnum+1):
 				network.hiddenandoutput[i] += learningrate*deltaoutput*output[0][i]
-			#print learningrate*deltaoutput*output[0][-1]	
-			#print network.hiddenandoutput[-1]
+
 			inputs.append(1)	
 
 			for i in range(0,network.hiddenunitsnum):	
 
 				for j in range(0,network.inputnum+1):
-					network.inputandhidden[i][j] += learningrate*deltaoutput*output[0][i]*inputs[j]
-			output = forward(network, inputs)
-			loss2 = (output[1]-label)*(output[1]-label)
+					network.inputandhidden[i][j] += learningrate*delta[i]*output[0][i]
+			#output = forward(network, inputs)
+			#loss2 = (output[1]-label)*(output[1]-label)
 			
 			'''
 			if loss1<loss2:
@@ -168,7 +168,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 				print 'attention',loss1, loss2
 			'''
 			
-		
+		'''
 		count =0
 		if ite%5 == 0:
 			loss = 0
@@ -189,7 +189,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 				#print label0,instance[-2],a
 			print ite,count,(count+0.0)/data.instnumber,loss
 		#return network
-		
+		'''
 	#return count
 
 def preparefolds(traindata, numfolds):
@@ -286,7 +286,7 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 
 	for line in output:
 		print line[0],line[1],line[2],line[3]
-	print count
+	print count,(count+0.0)/traindata.instnumber
 
 
 
@@ -300,20 +300,20 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 
 trainfile = "sonar.arff"
 numfolds = 10
-learningrate = 0.05
-numepochs = 500
+learningrate = 0.1
+numepochs = 50
 
 #load dataset
 traindata = readArff(trainfile)
 
 #intialize the network
-network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
+#network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
 #network.show()
 #training with cross validation
-#CVtraining(traindata, numfolds, learningrate, numepochs)
+CVtraining(traindata, numfolds, learningrate, numepochs)
 
 
-backward(network,traindata,traindata.instance,learningrate,numepochs)
+#backward(network,traindata,traindata.instance,learningrate,numepochs)
 	
 
 '''
