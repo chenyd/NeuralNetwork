@@ -316,7 +316,7 @@ network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
 backward(network,traindata,traindata.instance,1,300)
 backward(network,traindata,traindata.instance,0.5,300)
 backward(network,traindata,traindata.instance,0.1,1000)
-backward(network,traindata,traindata.instance,0.05,200)
+backward(network,traindata,traindata.instance,0.05,2000)
 	
 
 '''
