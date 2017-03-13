@@ -168,7 +168,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 				print 'attention',loss1, loss2
 			'''
 			
-		
+		'''
 		count =0
 		if ite%5 == 0:
 			loss = 0
@@ -189,7 +189,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 				#print label0,instance[-2],a
 			print ite,count,(count+0.0)/data.instnumber,loss
 		#return network
-		
+		'''
 	#return count
 
 def preparefolds(traindata, numfolds):
