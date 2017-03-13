@@ -168,7 +168,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 				print 'attention',loss1, loss2
 			'''
 			
-		'''
+		
 		count =0
 		if ite%5 == 0:
 			loss = 0
@@ -189,7 +189,7 @@ def backward(network, data, traindata, learningrate,numepochs):
 				#print label0,instance[-2],a
 			print ite,count,(count+0.0)/data.instnumber,loss
 		#return network
-		'''
+		
 	#return count
 
 def preparefolds(traindata, numfolds):
@@ -300,20 +300,20 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 
 trainfile = "sonar.arff"
 numfolds = 10
-learningrate = 0.1
-numepochs = 50
+learningrate = 0.05
+numepochs = 1000
 
 #load dataset
 traindata = readArff(trainfile)
 
 #intialize the network
-#network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
+network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
 #network.show()
 #training with cross validation
-CVtraining(traindata, numfolds, learningrate, numepochs)
+#CVtraining(traindata, numfolds, learningrate, numepochs)
 
 
-#backward(network,traindata,traindata.instance,learningrate,numepochs)
+backward(network,traindata,traindata.instance,learningrate,numepochs)
 	
 
 '''
@@ -337,8 +337,8 @@ for instance in traindata.instance:
 	if label!=instance[-1]:
 		count+=1
 	print label,instance[-2],a
-
 '''
+
 
 
 
