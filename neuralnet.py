@@ -300,44 +300,14 @@ def CVtraining(traindata, numfolds, learningrate, numepochs):
 
 trainfile = "sonar.arff"
 numfolds = 10
-learningrate = 0.05
-numepochs = 2000
+learningrate = 0.1
+numepochs = 50
 
 #load dataset
 traindata = readArff(trainfile)
 
-#intialize the network
-network = Network(traindata.attrnumber-1,traindata.attrnumber-1,[],[])
-#network.show()
 #training with cross validation
-#CVtraining(traindata, numfolds, learningrate, numepochs)
-
-
-backward(network,traindata,traindata.instance,learningrate,numepochs)
-	
-
-'''
-for i in range(0,numepochs):
-	a = backward(network,traindata,traindata.instance,learningrate,i)
-	
-	if a < 80:
-		learningrate = 0.05
-'''
-
-'''
-count =0
-for instance in traindata.instance:
-	#print instance
-	a = forward(network, instance[0:len(instance)-2])[1]
-	#print a
-	if  a<0.5:
-		label = traindata.attribute[-1][1]
-	else:
-		label = traindata.attribute[-1][2]
-	if label!=instance[-1]:
-		count+=1
-	print label,instance[-2],a
-'''
+CVtraining(traindata, numfolds, learningrate, numepochs)
 
 
 
