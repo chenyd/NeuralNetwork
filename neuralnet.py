@@ -21,7 +21,7 @@ class Network:#include inputnum, hiddenunitsnum, inputandhidden, hiddenandoutput
 		for i in range(0, hiddenunitsnum):
 			weight = []
 			for j in range(0, inputnum+1): #the last one functions as the bias
-				weight.append(random.uniform(-0.1, 0.1))
+				weight.append(random.uniform(0, 0.1))
 				#weight.append(0)
 			#weight.append(0)
 			inputandhidden.append(weight)
@@ -31,7 +31,7 @@ class Network:#include inputnum, hiddenunitsnum, inputandhidden, hiddenandoutput
 		hiddenandoutput = []
 
 		for i in range(0, hiddenunitsnum+1): #the last one functions as the bias
-			hiddenandoutput.append(random.uniform(-0.1,0.1))
+			hiddenandoutput.append(random.uniform(0,0.1))
 			#hiddenandoutput.append(0)
 		#hiddenandoutput.append(random.uniform(0,0.1))
 		self.hiddenandoutput = hiddenandoutput
