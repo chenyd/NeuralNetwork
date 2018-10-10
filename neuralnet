@@ -1,0 +1,4 @@
+#!/bin/bash
+#neuralnet trainfile num_folds learning_rate num_epochs 
+cd src
+python neuralnet.py $1 $2 $3 $4
